@@ -1,67 +1,40 @@
 # helix-trade-backtest-pipe
 
-`helix-trade-backtest-pipe` is a focused Zig codebase around design a Zig verification harness for backtest systems, covering state machine modeling, transition tables, and failure-oriented tests. It is meant to be easy to inspect, run, and extend without a hosted service.
+`helix-trade-backtest-pipe` explores trading systems with a small Zig codebase and local fixtures. The technical goal is to design a Zig verification harness for backtest systems, covering state machine modeling, transition tables, and failure-oriented tests.
 
-## Helix Trade Backtest Pipe Walkthrough
+## Problem It Tries To Make Smaller
 
-I would read the project from the outside in: command, fixture, model, then roadmap. That keeps the trading systems idea grounded in files that can be checked locally.
+This is intentionally local and self-contained so it can be inspected without credentials, services, or seeded history.
 
-## Capabilities
+## Helix Trade Backtest Pipe Review Notes
 
-- Includes extended examples for fills, including `surge` and `degraded`.
-- Documents portfolio pressure tradeoffs in `docs/operations.md`.
-- Runs locally with a single verification command and no external credentials.
-- Stores project constants and verification metadata in `metadata/project.json`.
-- Adds a repository audit script that checks structure before running the language verifier.
+For a quick review, compare `portfolio drift` with `spread pressure` before reading the middle cases.
 
-## Reason For The Project
+## Working Pieces
 
-I use this kind of project to make a rule visible before adding more machinery around it. The important part here is not the size of the codebase. It is that the input signals, scoring rule, fixture data, and expected output can all be checked in one sitting.
+- `fixtures/domain_review.csv` adds cases for spread pressure and fill risk.
+- `metadata/domain-review.json` records the same cases in structured form.
+- `config/review-profile.json` captures the read order and the two review questions.
+- `examples/helix-trade-backtest-walkthrough.md` walks through the case spread.
+- The Zig code includes a review path for `portfolio drift` and `spread pressure`.
+- `docs/field-notes.md` explains the strongest and weakest cases.
 
-## Where Things Live
+## Design Notes
 
-- `src`: primary implementation
-- `fixtures`: compact golden scenarios
-- `examples`: expanded scenario set
-- `metadata`: project constants and verification metadata
-- `docs`: operations and extension notes
-- `scripts`: local verification and audit commands
+The implementation keeps the scoring rule plain: reward signal and confidence, preserve slack, penalize drag, then classify the result into a review lane.
 
-## How It Is Put Together
+The Zig implementation avoids hidden state so fixture changes are easy to reason about.
 
-The project is organized around a compact model rather than a large framework. Inputs are scored, classified, and checked against golden fixtures. The constants live in code and are mirrored in metadata so documentation drift is easy to catch. The Zig version uses compile-time constants and native test blocks for fast local checks.
-
-## Command Examples
+## Example Run
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-This runs the language-level build or test path against the compact fixture set.
+## Tests
 
-## Data Notes
+The same command runs the local verification path. The highest-scoring domain case is `edge` at 216, which lands in `ship`. The most cautious case is `stale` at 175, which lands in `ship`.
 
-The examples are meant to be readable before they are exhaustive. They cover enough variation to show how latency and risk can pull a decision below the threshold.
+## Known Limits
 
-## Check The Work
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
-```
-
-The audit command checks repository structure and README constraints before it delegates to the verifier.
-
-## Tradeoffs
-
-The scoring model is simple by design. More domain-specific behavior should be added through explicit adapters or extra fixture classes rather than hidden constants.
-
-## Possible Extensions
-
-- Split the scoring constants into a typed configuration object and validate it before use.
-- Add a comparison mode that shows how decisions change when one signal is adjusted.
-- Add a loader for `examples/extended_cases.csv` and promote selected cases into the language test suite.
-- Add one more trading systems fixture that focuses on a malformed or borderline input.
-
-## Getting It Running
-
-Clone the repository, enter the directory, and run the verifier. No database server, cloud account, or token is required.
+This remains a local project with deterministic fixtures. It does not depend on credentials, hosted services, or live data. Future work should add richer malformed inputs before widening the public API.

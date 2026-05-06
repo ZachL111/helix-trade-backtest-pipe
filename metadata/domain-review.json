@@ -1,0 +1,73 @@
+{
+  "repo": "helix-trade-backtest-pipe",
+  "language": "Zig",
+  "category": "Trading systems",
+  "goal": "Design a Zig verification harness for backtest systems, covering state machine modeling, transition tables, and failure-oriented tests.",
+  "review_model": {
+    "terms": [
+      "spread pressure",
+      "fill risk",
+      "portfolio drift",
+      "quote width"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "spread pressure",
+      "signal": 77,
+      "slack": 34,
+      "drag": 21,
+      "confidence": 79,
+      "score": 204,
+      "lane": "ship"
+    },
+    {
+      "name": "stress",
+      "focus": "fill risk",
+      "signal": 78,
+      "slack": 27,
+      "drag": 27,
+      "confidence": 78,
+      "score": 180,
+      "lane": "ship"
+    },
+    {
+      "name": "edge",
+      "focus": "portfolio drift",
+      "signal": 70,
+      "slack": 46,
+      "drag": 16,
+      "confidence": 78,
+      "score": 216,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "quote width",
+      "signal": 67,
+      "slack": 32,
+      "drag": 10,
+      "confidence": 65,
+      "score": 201,
+      "lane": "ship"
+    },
+    {
+      "name": "stale",
+      "focus": "spread pressure",
+      "signal": 59,
+      "slack": 31,
+      "drag": 8,
+      "confidence": 50,
+      "score": 175,
+      "lane": "ship"
+    }
+  ]
+}
