@@ -61,3 +61,9 @@ foreach ($pathPattern in $knownPaths) {
 zig test src/main.zig
 
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-helix-trade-backtest-detail.ps1
+
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-helix-trade-backtest-properties.ps1
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-helix-trade-backtest-golden.ps1
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

@@ -1,0 +1,17 @@
+{
+  "repo": "helix-trade-backtest-pipe",
+  "thresholds": {
+    "signal": 2,
+    "slack": 1,
+    "confidence": 2,
+    "drag": 4,
+    "ship": 156,
+    "watch": 110
+  },
+  "terms": [
+    "spread pressure",
+    "fill risk",
+    "portfolio drift",
+    "quote width"
+  ]
+}
